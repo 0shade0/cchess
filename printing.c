@@ -1,6 +1,41 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include "variables.h"
+
+void printRowNumber(int row, bool left) {
+    printf("%d", 8 - row);
+    if(left) {
+        printf("  ");
+    } else {
+        printf("\n");
+    }
+}
+
+void printInBetweenColumns(int column) {
+    if(column == 7) {
+        printf(" ");
+    } else {
+        printf("|");
+    }
+}
+
+void printInBetweenRow(int row) {
+    if(row == 7 || row == 0) {
+        printf("   ---------------------------------------   \n");
+    } else {
+        printf("   ----+----+----+----+----+----+----+----   \n");
+    }
+}
+
+void printLetterRow(bool top) {
+    if(top) {
+        printf("    A    B    C    D    E    F    G    H     \n");
+        printInBetweenRow(0);
+    } else {
+        printf("    A    B    C    D    E    F    G    H     \n\n");
+    }
+}
 
 void printSquareSelection(bool selected, bool left) {
     if(!selected) {
@@ -29,59 +64,54 @@ void printSquare(int column, char square[2], bool selected) {
     printInBetweenColumns(column);
 }
 
-void printSquareRow(int rowNumber, char row[8][2], int selectedColumn) {
+void printSquareRow(int rowNumber, int selectedColumn) {
     printRowNumber(rowNumber, true);
     for (int column=0; column < 8; column++) {
-        printSquare(column, row[column], selectedColumn == column);
+        printSquare(column, square(rowNumber, column), selectedColumn == column);
     }
     printRowNumber(rowNumber, false);
     printInBetweenRow(rowNumber);
 }
 
-void printRowNumber(int row, bool left) {
-    printf("%d", 8 - row);
-    if(left) {
-        printf("  ");
-    } else {
-        printf("\n");
+void printPiecesTaken() {
+    int p1No = getP1NoOfPiecesTaken();
+    int p2No = getP2NoOfPiecesTaken();
+    if(p1No == -1 || p2No == -1) return;
+
+    char piece[2];
+
+    printf("Player 1 pieces taken(%d): ", p1No);
+    for(int i=0; i < p1No; i++) {
+        strncpy(piece, p1PieceTaken(i), 2);
+        printf("%c%c ", piece[0], piece[1]);
     }
+    printf("\n");
+
+    printf("Player 2 pieces taken(%d): ", p2No);
+    for(int i=0; i < p2No; i++) {
+        strncpy(piece, p2PieceTaken(i), 2);
+        printf("%c%c ", piece[0], piece[1]);
+    }
+
+    printf("\n");
+
+    printf("\n");
 }
 
-void printLetterRow(bool top) {
-    if(top) {
-        printf("    A    B    C    D    E    F    G    H     \n");
-        printInBetweenRow(0);
-    } else {
-        printf("    A    B    C    D    E    F    G    H     \n\n");
-    }
-}
-
-void printInBetweenColumns(int column) {
-    if(column == 7) {
-        printf(" ");
-    } else {
-        printf("|");
-    }
-}
-
-void printInBetweenRow(int row) {
-    if(row == 7 || row == 0) {
-        printf("   ---------------------------------------   \n");
-    } else {
-        printf("   ----+----+----+----+----+----+----+----   \n");
-    }
-}
-
-void printBoard(char board[8][8][2], int selectedRow, int selectedColumn) {
+void printBoard(int selectedRow, int selectedColumn, bool piecesTaken) {
     int row;
+
+    if(piecesTaken) {
+        printPiecesTaken();
+    }
 
     printLetterRow(true);
 
     for(row=0; row < 8; row++) {
         if(row == selectedRow) {
-            printSquareRow(row, board[row], selectedColumn);
+            printSquareRow(row, selectedColumn);
         } else {
-            printSquareRow(row, board[row], -1);
+            printSquareRow(row, -1);
         }
     }
 

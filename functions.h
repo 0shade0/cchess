@@ -1,6 +1,17 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
 
-bool checkIfValidPiece(int x, int y, char board[8][8][2], int player);
+bool checkIfValidPiece(int x, int y, char square[2]);
 
-void printBoard(char board[8][8][2], int x, int y);
+bool checkIfValidMove(int x, int y);
 
-void doMove(char board[8][8][2], int player);
+int selectPiece();
+
+int doMove();
+
+void updateBoard(int moveValue);
+
+void nextTurn();
